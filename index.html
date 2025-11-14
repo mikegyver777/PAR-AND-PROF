@@ -379,7 +379,7 @@
 
         .button-section {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
             margin-top: 15px;
         }
@@ -404,6 +404,229 @@
         .new-file-btn {
             background: #4CAF50;
             color: white;
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .close-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #d32f2f;
+            transform: rotate(90deg);
+        }
+
+        .modal-tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .tab-btn.active {
+            background: white;
+            border-bottom: 3px solid #9C27B0;
+            color: #9C27B0;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .add-name-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-name-section input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid #9C27B0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .add-name-section button {
+            padding: 10px 20px;
+            background: #9C27B0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-name-section button:hover {
+            background: #7B1FA2;
+        }
+
+        .names-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .name-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .name-item:hover {
+            border-color: #9C27B0;
+            background: #fce4ec;
+        }
+
+        .name-item span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .delete-name-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .delete-name-btn:hover {
+            background: #d32f2f;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Name dropdown styles */
+        .name-select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px solid #000;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .name-select option {
+            padding: 8px;
         }
 
         @media print {
@@ -656,6 +879,16 @@
                 margin-bottom: 8px;
             }
             
+            .name-row > *[style*="display: none"] {
+                display: none !important;
+                grid-column: 1;
+            }
+            
+            .name-row .name-select,
+            .name-row .name-input {
+                grid-column: 1;
+            }
+            
             .name-input {
                 padding: 6px 10px !important;
                 font-size: 20px !important;
@@ -663,6 +896,18 @@
                 color: black !important;
                 border: 2px solid black !important;
                 box-sizing: border-box !important;
+            }
+            .name-select {
+                padding: 6px 10px !important;
+                font-size: 20px !important;
+                font-weight: bold !important;
+                color: black !important;
+                border: 2px solid black !important;
+                box-sizing: border-box !important;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background: white !important;
             }
             .name-amount {
                 padding: 8px 4px !important;
@@ -706,45 +951,45 @@
             .calculation-breakdown {
                 display: block !important;
                 page-break-before: always;
-                padding: 30px !important;
+                padding: 20px !important;
                 background: white !important;
             }
             .breakdown-title {
-                font-size: 20px !important;
+                font-size: 19px !important;
                 font-weight: bold !important;
                 text-align: center !important;
-                margin-bottom: 20px !important;
-                padding: 15px !important;
+                margin-bottom: 12px !important;
+                padding: 12px !important;
                 border: 3px solid black !important;
                 background: white !important;
                 color: black !important;
             }
             .breakdown-section {
-                margin-bottom: 20px !important;
-                padding: 15px !important;
+                margin-bottom: 12px !important;
+                padding: 12px !important;
                 border: 2px solid black !important;
                 background: white !important;
             }
             .breakdown-section-title {
-                font-size: 15px !important;
+                font-size: 14px !important;
                 font-weight: bold !important;
-                margin-bottom: 12px !important;
+                margin-bottom: 8px !important;
                 color: black !important;
                 text-decoration: underline;
             }
             .breakdown-line {
                 display: flex !important;
                 justify-content: space-between !important;
-                padding: 5px 0 !important;
-                font-size: 13px !important;
+                padding: 3px 0 !important;
+                font-size: 12px !important;
                 color: black !important;
             }
             .breakdown-line.total {
                 font-weight: bold !important;
                 border-top: 2px solid black !important;
-                margin-top: 8px !important;
-                padding-top: 8px !important;
-                font-size: 14px !important;
+                margin-top: 6px !important;
+                padding-top: 6px !important;
+                font-size: 13px !important;
             }
             @page {
                 margin: 0.4in 0.35in;
@@ -989,12 +1234,164 @@
 
         <div class="button-section">
             <button class="action-btn print-btn" onclick="printInvoice()">🖨️ PRINT</button>
+            <button class="action-btn" style="background: #9C27B0; color: white;" onclick="openManageNamesModal()">👥 MANAGE NAMES</button>
             <button class="action-btn new-file-btn" onclick="addNewFile()">+ NEW FILE</button>
+        </div>
+
+        <!-- MANAGE NAMES MODAL -->
+        <div id="manageNamesModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Manage Saved Names</h2>
+                    <button class="close-btn" onclick="closeManageNamesModal()">✕</button>
+                </div>
+                
+                <div class="modal-tabs">
+                    <button class="tab-btn active" onclick="switchTab('vets')">VETS</button>
+                    <button class="tab-btn" onclick="switchTab('reps')">REPS</button>
+                    <button class="tab-btn" onclick="switchTab('rideAlongs')">RIDE ALONGS</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- VETS TAB -->
+                    <div id="vetsTab" class="tab-content active">
+                        <div class="add-name-section">
+                            <input type="text" id="newVetName" placeholder="Enter vet name..." onkeypress="if(event.key==='Enter') addNameToList('vets')">
+                            <button onclick="addNameToList('vets')">+ ADD VET</button>
+                        </div>
+                        <div id="vetsList" class="names-list"></div>
+                    </div>
+
+                    <!-- REPS TAB -->
+                    <div id="repsTab" class="tab-content">
+                        <div class="add-name-section">
+                            <input type="text" id="newRepName" placeholder="Enter rep name..." onkeypress="if(event.key==='Enter') addNameToList('reps')">
+                            <button onclick="addNameToList('reps')">+ ADD REP</button>
+                        </div>
+                        <div id="repsList" class="names-list"></div>
+                    </div>
+
+                    <!-- RIDE ALONGS TAB -->
+                    <div id="rideAlongsTab" class="tab-content">
+                        <div class="add-name-section">
+                            <input type="text" id="newRideAlongName" placeholder="Enter ride along name..." onkeypress="if(event.key==='Enter') addNameToList('rideAlongs')">
+                            <button onclick="addNameToList('rideAlongs')">+ ADD RIDE ALONG</button>
+                        </div>
+                        <div id="rideAlongsList" class="names-list"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="action-btn" style="background: #4CAF50; color: white;" onclick="closeManageNamesModal()">DONE</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         let activePAR = null; // Track which PAR system is active: 'gutters', 'insulation', 'coating', or null
+
+        // SAVED NAMES MANAGEMENT
+        let savedNames = {
+            vets: [],
+            reps: [],
+            rideAlongs: []
+        };
+
+        function loadSavedNames() {
+            const stored = localStorage.getItem('altaCalSavedNames');
+            if (stored) {
+                savedNames = JSON.parse(stored);
+            }
+        }
+
+        function saveSavedNames() {
+            localStorage.setItem('altaCalSavedNames', JSON.stringify(savedNames));
+        }
+
+        function openManageNamesModal() {
+            document.getElementById('manageNamesModal').classList.add('active');
+            renderAllNameLists();
+        }
+
+        function closeManageNamesModal() {
+            document.getElementById('manageNamesModal').classList.remove('active');
+            // Refresh the invoice name fields
+            updateNameFields();
+        }
+
+        function switchTab(tabName) {
+            // Remove active from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active to selected tab
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function addNameToList(type) {
+            let inputId, listKey;
+            
+            if (type === 'vets') {
+                inputId = 'newVetName';
+                listKey = 'vets';
+            } else if (type === 'reps') {
+                inputId = 'newRepName';
+                listKey = 'reps';
+            } else if (type === 'rideAlongs') {
+                inputId = 'newRideAlongName';
+                listKey = 'rideAlongs';
+            }
+            
+            const input = document.getElementById(inputId);
+            const name = input.value.trim();
+            
+            if (name && !savedNames[listKey].includes(name)) {
+                savedNames[listKey].push(name);
+                savedNames[listKey].sort();
+                saveSavedNames();
+                renderNameList(listKey);
+                input.value = '';
+            }
+        }
+
+        function deleteNameFromList(type, name) {
+            if (confirm(`Delete "${name}" from the list?`)) {
+                savedNames[type] = savedNames[type].filter(n => n !== name);
+                saveSavedNames();
+                renderNameList(type);
+                // Refresh invoice fields
+                updateNameFields();
+            }
+        }
+
+        function renderNameList(type) {
+            let listId;
+            if (type === 'vets') listId = 'vetsList';
+            else if (type === 'reps') listId = 'repsList';
+            else if (type === 'rideAlongs') listId = 'rideAlongsList';
+            
+            const container = document.getElementById(listId);
+            
+            if (savedNames[type].length === 0) {
+                container.innerHTML = '<div class="empty-state">No names saved yet. Add your first name above!</div>';
+                return;
+            }
+            
+            container.innerHTML = savedNames[type].map(name => `
+                <div class="name-item">
+                    <span>${name}</span>
+                    <button class="delete-name-btn" onclick="deleteNameFromList('${type}', '${name}')">✕ Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function renderAllNameLists() {
+            renderNameList('vets');
+            renderNameList('reps');
+            renderNameList('rideAlongs');
+        }
 
         function addParAddOn() {
             const container = document.getElementById('parAddOnsList');
@@ -1253,7 +1650,12 @@
 
             // Update vet names
             const vetList = document.getElementById('vetNamesList');
-            const currentVetNames = Array.from(vetList.querySelectorAll('input')).map(i => i.value);
+            const currentVetValues = Array.from(vetList.querySelectorAll('.name-select, .name-input')).map(el => {
+                if (el.classList.contains('name-select')) {
+                    return el.value === 'custom' ? el.nextElementSibling.value : el.value;
+                }
+                return el.value;
+            });
             vetList.innerHTML = '';
             
             // Add VETS label
@@ -1268,12 +1670,53 @@
                 const row = document.createElement('div');
                 row.className = 'name-row';
                 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'name-input';
-                input.placeholder = `Vet ${i + 1} Name`;
-                input.value = currentVetNames[i] || '';
-                input.onchange = saveData;
+                // Create dropdown
+                const select = document.createElement('select');
+                select.className = 'name-select';
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Vet...';
+                select.appendChild(defaultOption);
+                
+                // Add saved names
+                savedNames.vets.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    if (currentVetValues[i] === name) option.selected = true;
+                    select.appendChild(option);
+                });
+                
+                // Add custom option
+                const customOption = document.createElement('option');
+                customOption.value = 'custom';
+                customOption.textContent = '➕ Custom Name...';
+                select.appendChild(customOption);
+                
+                // Set current value
+                if (currentVetValues[i] && !savedNames.vets.includes(currentVetValues[i])) {
+                    select.value = 'custom';
+                }
+                
+                select.onchange = function() {
+                    handleNameSelectChange(this, currentVetValues[i]);
+                    saveData();
+                };
+                
+                // Create custom input (hidden by default)
+                const customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.className = 'name-input';
+                customInput.placeholder = 'Enter custom name...';
+                customInput.style.display = 'none';
+                if (currentVetValues[i] && !savedNames.vets.includes(currentVetValues[i])) {
+                    customInput.style.display = 'block';
+                    customInput.value = currentVetValues[i];
+                    select.style.display = 'none';
+                }
+                customInput.onchange = saveData;
                 
                 const amount = document.createElement('div');
                 amount.className = 'name-amount';
@@ -1283,7 +1726,6 @@
                 const initialBoxes = document.createElement('div');
                 initialBoxes.className = 'initial-boxes';
                 
-                // First initial box (for the person)
                 const personBox = document.createElement('div');
                 personBox.className = 'initial-box';
                 const personSquare = document.createElement('div');
@@ -1294,7 +1736,6 @@
                 personBox.appendChild(personSquare);
                 personBox.appendChild(personLabel);
                 
-                // Second initial box (for Ryan A/Juan E)
                 const approvalBox = document.createElement('div');
                 approvalBox.className = 'initial-box';
                 const approvalSquare = document.createElement('div');
@@ -1308,7 +1749,8 @@
                 initialBoxes.appendChild(personBox);
                 initialBoxes.appendChild(approvalBox);
                 
-                row.appendChild(input);
+                row.appendChild(select);
+                row.appendChild(customInput);
                 row.appendChild(amount);
                 row.appendChild(initialBoxes);
                 vetList.appendChild(row);
@@ -1316,7 +1758,12 @@
 
             // Update rep names
             const repList = document.getElementById('repNamesList');
-            const currentRepNames = Array.from(repList.querySelectorAll('input')).map(i => i.value);
+            const currentRepValues = Array.from(repList.querySelectorAll('.name-select, .name-input')).map(el => {
+                if (el.classList.contains('name-select')) {
+                    return el.value === 'custom' ? el.nextElementSibling.value : el.value;
+                }
+                return el.value;
+            });
             repList.innerHTML = '';
             
             // Add REPS label
@@ -1331,22 +1778,55 @@
                 const row = document.createElement('div');
                 row.className = 'name-row';
                 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'name-input';
-                input.placeholder = `Rep ${i + 1} Name`;
-                input.value = currentRepNames[i] || '';
-                input.onchange = saveData;
+                const select = document.createElement('select');
+                select.className = 'name-select';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Rep...';
+                select.appendChild(defaultOption);
+                
+                savedNames.reps.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    if (currentRepValues[i] === name) option.selected = true;
+                    select.appendChild(option);
+                });
+                
+                const customOption = document.createElement('option');
+                customOption.value = 'custom';
+                customOption.textContent = '➕ Custom Name...';
+                select.appendChild(customOption);
+                
+                if (currentRepValues[i] && !savedNames.reps.includes(currentRepValues[i])) {
+                    select.value = 'custom';
+                }
+                
+                select.onchange = function() {
+                    handleNameSelectChange(this, currentRepValues[i]);
+                    saveData();
+                };
+                
+                const customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.className = 'name-input';
+                customInput.placeholder = 'Enter custom name...';
+                customInput.style.display = 'none';
+                if (currentRepValues[i] && !savedNames.reps.includes(currentRepValues[i])) {
+                    customInput.style.display = 'block';
+                    customInput.value = currentRepValues[i];
+                    select.style.display = 'none';
+                }
+                customInput.onchange = saveData;
                 
                 const amount = document.createElement('div');
                 amount.className = 'name-amount';
                 amount.textContent = finalPerRep;
                 
-                // Create initial boxes container
                 const initialBoxes = document.createElement('div');
                 initialBoxes.className = 'initial-boxes';
                 
-                // First initial box (for the person)
                 const personBox = document.createElement('div');
                 personBox.className = 'initial-box';
                 const personSquare = document.createElement('div');
@@ -1357,7 +1837,6 @@
                 personBox.appendChild(personSquare);
                 personBox.appendChild(personLabel);
                 
-                // Second initial box (for Ryan A/Juan E)
                 const approvalBox = document.createElement('div');
                 approvalBox.className = 'initial-box';
                 const approvalSquare = document.createElement('div');
@@ -1371,7 +1850,8 @@
                 initialBoxes.appendChild(personBox);
                 initialBoxes.appendChild(approvalBox);
                 
-                row.appendChild(input);
+                row.appendChild(select);
+                row.appendChild(customInput);
                 row.appendChild(amount);
                 row.appendChild(initialBoxes);
                 repList.appendChild(row);
@@ -1379,7 +1859,12 @@
 
             // Update ride along names
             const raList = document.getElementById('rideAlongNamesList');
-            const currentRANames = Array.from(raList.querySelectorAll('input')).map(i => i.value);
+            const currentRAValues = Array.from(raList.querySelectorAll('.name-select, .name-input')).map(el => {
+                if (el.classList.contains('name-select')) {
+                    return el.value === 'custom' ? el.nextElementSibling.value : el.value;
+                }
+                return el.value;
+            });
             raList.innerHTML = '';
             
             // Add R/A label
@@ -1394,22 +1879,55 @@
                 const row = document.createElement('div');
                 row.className = 'name-row';
                 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'name-input';
-                input.placeholder = `Ride Along ${i + 1} Name`;
-                input.value = currentRANames[i] || '';
-                input.onchange = saveData;
+                const select = document.createElement('select');
+                select.className = 'name-select';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Ride Along...';
+                select.appendChild(defaultOption);
+                
+                savedNames.rideAlongs.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    if (currentRAValues[i] === name) option.selected = true;
+                    select.appendChild(option);
+                });
+                
+                const customOption = document.createElement('option');
+                customOption.value = 'custom';
+                customOption.textContent = '➕ Custom Name...';
+                select.appendChild(customOption);
+                
+                if (currentRAValues[i] && !savedNames.rideAlongs.includes(currentRAValues[i])) {
+                    select.value = 'custom';
+                }
+                
+                select.onchange = function() {
+                    handleNameSelectChange(this, currentRAValues[i]);
+                    saveData();
+                };
+                
+                const customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.className = 'name-input';
+                customInput.placeholder = 'Enter custom name...';
+                customInput.style.display = 'none';
+                if (currentRAValues[i] && !savedNames.rideAlongs.includes(currentRAValues[i])) {
+                    customInput.style.display = 'block';
+                    customInput.value = currentRAValues[i];
+                    select.style.display = 'none';
+                }
+                customInput.onchange = saveData;
                 
                 const amount = document.createElement('div');
                 amount.className = 'name-amount';
                 amount.textContent = perRideAlong;
                 
-                // Create initial boxes container
                 const initialBoxes = document.createElement('div');
                 initialBoxes.className = 'initial-boxes';
                 
-                // First initial box (for the person)
                 const personBox = document.createElement('div');
                 personBox.className = 'initial-box';
                 const personSquare = document.createElement('div');
@@ -1420,7 +1938,6 @@
                 personBox.appendChild(personSquare);
                 personBox.appendChild(personLabel);
                 
-                // Second initial box (for Ryan A/Juan E)
                 const approvalBox = document.createElement('div');
                 approvalBox.className = 'initial-box';
                 const approvalSquare = document.createElement('div');
@@ -1434,10 +1951,25 @@
                 initialBoxes.appendChild(personBox);
                 initialBoxes.appendChild(approvalBox);
                 
-                row.appendChild(input);
+                row.appendChild(select);
+                row.appendChild(customInput);
                 row.appendChild(amount);
                 row.appendChild(initialBoxes);
                 raList.appendChild(row);
+            }
+        }
+
+        function handleNameSelectChange(selectElement, previousValue) {
+            const customInput = selectElement.nextElementSibling;
+            
+            if (selectElement.value === 'custom') {
+                selectElement.style.display = 'none';
+                customInput.style.display = 'block';
+                customInput.value = previousValue && !Object.values(savedNames).flat().includes(previousValue) ? previousValue : '';
+                customInput.focus();
+            } else {
+                selectElement.style.display = 'block';
+                customInput.style.display = 'none';
             }
         }
 
@@ -1704,7 +2236,7 @@
                 const perRepBeforeFees = totalSalesmen > 0 ? totalRepCommission / totalSalesmen : 0;
                 
                 // Reps on profit share pay same fees as vets
-                finalPerRep = perRepBeforeFees - rideAlongFeePerPerson - netAmountFeePerPerson;
+                finalPerRep = perRepBeforeFees - rideAlongFeePerPerson;
                 
                 // Show profit share rate box when not on PAR
                 if (numReps > 0) {
@@ -1738,8 +2270,48 @@
             const numVets = parseValue(document.getElementById('numVets').value);
             const numReps = parseValue(document.getElementById('numReps').value);
             const rideAlongFee = parseValue(document.getElementById('rideAlongFee').value);
+            const customerName = document.getElementById('customerName').value || 'N/A';
+            const jobNumber = document.getElementById('jobNumber').value || 'N/A';
+            
+            // Get all names at the start - find ALL input and select elements
+            const vetList = document.getElementById('vetNamesList');
+            const vetElements = vetList ? vetList.querySelectorAll('input, select') : [];
+            const vetNames = [];
+            vetElements.forEach(el => {
+                const val = el.value.trim();
+                if (val && val !== 'custom' && val.length > 0) {
+                    vetNames.push(val);
+                }
+            });
+            
+            const repList = document.getElementById('repNamesList');
+            const repElements = repList ? repList.querySelectorAll('input, select') : [];
+            const repNames = [];
+            repElements.forEach(el => {
+                const val = el.value.trim();
+                if (val && val !== 'custom' && val.length > 0) {
+                    repNames.push(val);
+                }
+            });
+            
+            const rideAlongList = document.getElementById('rideAlongNamesList');
+            const rideAlongElements = rideAlongList ? rideAlongList.querySelectorAll('input, select') : [];
+            const rideAlongNames = [];
+            rideAlongElements.forEach(el => {
+                const val = el.value.trim();
+                if (val && val !== 'custom' && val.length > 0) {
+                    rideAlongNames.push(val);
+                }
+            });
             
             let html = '';
+            
+            // Add customer info header
+            html += '<div class="breakdown-section">';
+            html += '<div class="breakdown-section-title">JOB INFORMATION</div>';
+            html += `<div class="breakdown-line"><span>Customer Name:</span><span>${customerName}</span></div>`;
+            html += `<div class="breakdown-line"><span>Job Number:</span><span>${jobNumber}</span></div>`;
+            html += '</div>';
             
             // Check if we're using PAR for reps
             const usingPAR = activePAR !== null && numReps > 0;
@@ -1765,6 +2337,12 @@
                 const totalAfterFees = afterFeesFromContract - totalLaborMaterial;
                 const profitPercent = contractAmount > 0 ? (totalAfterFees / contractAmount) * 100 : 0;
                 
+                // Calculate vet rate based on profit percent
+                let vetRate = 25;
+                if (profitPercent >= 50) vetRate = 55;
+                else if (profitPercent >= 40) vetRate = 45;
+                else if (profitPercent >= 33) vetRate = 35;
+                
                 html += '<div class="breakdown-section">';
                 html += '<div class="breakdown-section-title">CONTRACT & FEES</div>';
                 html += `<div class="breakdown-line"><span>Contract Amount:</span><span>${formatCurrency(contractAmount)}</span></div>`;
@@ -1774,33 +2352,40 @@
                 html += `<div class="breakdown-line"><span>= After Fees from Contract:</span><span>${formatCurrency(afterFeesFromContract)}</span></div>`;
                 html += `<div class="breakdown-line"><span>- Job Cost (Labor & Materials):</span><span>-${formatCurrency(totalLaborMaterial)}</span></div>`;
                 html += `<div class="breakdown-line total"><span>= After All Fees (Profit Pool):</span><span>${formatCurrency(totalAfterFees)}</span></div>`;
-                html += `<div class="breakdown-line total"><span>Profit Percentage:</span><span>${profitPercent.toFixed(2)}%</span></div>`;
                 html += '</div>';
                 
                 // VET CALCULATION
                 if (numVets > 0) {
-                    let vetRate = 25;
-                    if (profitPercent >= 50) vetRate = 55;
-                    else if (profitPercent >= 40) vetRate = 45;
-                    else if (profitPercent >= 33) vetRate = 35;
                     
                     const totalSalesmen = numVets + numReps;
                     const totalVetCommission = (totalAfterFees * vetRate) / 100;
                     const perVetBeforeFees = totalSalesmen > 0 ? totalVetCommission / totalSalesmen : 0;
                     const totalPeople = numVets + numReps;
                     const rideAlongFeePerPerson = totalPeople > 0 ? rideAlongFee / totalPeople : 0;
-                    const netAmountFeePerPerson = totalPeople > 0 ? netAmountDiff / totalPeople : 0;
-                    const finalPerVet = perVetBeforeFees - rideAlongFeePerPerson - netAmountFeePerPerson;
+                    const finalPerVet = perVetBeforeFees - rideAlongFeePerPerson;
                     
                     html += '<div class="breakdown-section">';
                     html += '<div class="breakdown-section-title">VET PAYOUT (PROFIT SHARE)</div>';
+                    
                     html += `<div class="breakdown-line"><span>Profit Pool (After All Fees):</span><span>${formatCurrency(totalAfterFees)}</span></div>`;
                     html += `<div class="breakdown-line"><span>Vet Rate (based on ${profitPercent.toFixed(2)}% profit):</span><span>${vetRate}%</span></div>`;
                     html += `<div class="breakdown-line"><span>Total Vet Commission:</span><span>${formatCurrency(totalVetCommission)}</span></div>`;
                     html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perVetBeforeFees)}</span></div>`;
                     html += `<div class="breakdown-line"><span>- Ride Along Fee Share:</span><span>-${formatCurrency(rideAlongFeePerPerson)}</span></div>`;
-                    html += `<div class="breakdown-line"><span>- Net Amount Fee Share:</span><span>-${formatCurrency(netAmountFeePerPerson)}</span></div>`;
                     html += `<div class="breakdown-line total"><span>Final Per Vet:</span><span>${formatCurrency(finalPerVet)}</span></div>`;
+                    
+                    // Add individual vet names with amounts - ALWAYS show this section
+                    html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid black;">';
+                    html += '<div style="font-weight: bold; margin-bottom: 6px; font-size: 13px;">VET PAYOUTS:</div>';
+                    if (vetNames.length > 0) {
+                        vetNames.forEach(name => {
+                            html += `<div class="breakdown-line" style="font-size: 14px; font-weight: bold;"><span>${name}:</span><span>${formatCurrency(finalPerVet)}</span></div>`;
+                        });
+                    } else {
+                        html += '<div class="breakdown-line" style="font-size: 14px; font-style: italic;"><span>No vet names entered</span><span></span></div>';
+                    }
+                    html += '</div>';
+                    
                     html += '</div>';
                 }
                 
@@ -1816,18 +2401,30 @@
                     const perRepBeforeFees = totalSalesmen > 0 ? totalRepCommission / totalSalesmen : 0;
                     const totalPeople = numVets + numReps;
                     const rideAlongFeePerPerson = totalPeople > 0 ? rideAlongFee / totalPeople : 0;
-                    const netAmountFeePerPerson = totalPeople > 0 ? netAmountDiff / totalPeople : 0;
-                    const finalPerRep = perRepBeforeFees - rideAlongFeePerPerson - netAmountFeePerPerson;
+                    const finalPerRep = perRepBeforeFees - rideAlongFeePerPerson;
                     
                     html += '<div class="breakdown-section">';
                     html += '<div class="breakdown-section-title">REP PAYOUT (PROFIT SHARE)</div>';
+                    
                     html += `<div class="breakdown-line"><span>Profit Pool (After All Fees):</span><span>${formatCurrency(totalAfterFees)}</span></div>`;
                     html += `<div class="breakdown-line"><span>Rep Rate (based on ${profitPercent.toFixed(2)}% profit):</span><span>${repRate}%</span></div>`;
                     html += `<div class="breakdown-line"><span>Total Rep Commission:</span><span>${formatCurrency(totalRepCommission)}</span></div>`;
                     html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perRepBeforeFees)}</span></div>`;
                     html += `<div class="breakdown-line"><span>- Ride Along Fee Share:</span><span>-${formatCurrency(rideAlongFeePerPerson)}</span></div>`;
-                    html += `<div class="breakdown-line"><span>- Net Amount Fee Share:</span><span>-${formatCurrency(netAmountFeePerPerson)}</span></div>`;
                     html += `<div class="breakdown-line total"><span>Final Per Rep:</span><span>${formatCurrency(finalPerRep)}</span></div>`;
+                    
+                    // Add individual rep names with amounts - ALWAYS show this section
+                    html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid black;">';
+                    html += '<div style="font-weight: bold; margin-bottom: 6px; font-size: 13px;">REP PAYOUTS:</div>';
+                    if (repNames.length > 0) {
+                        repNames.forEach(name => {
+                            html += `<div class="breakdown-line" style="font-size: 14px; font-weight: bold;"><span>${name}:</span><span>${formatCurrency(finalPerRep)}</span></div>`;
+                        });
+                    } else {
+                        html += '<div class="breakdown-line" style="font-size: 14px; font-style: italic;"><span>No rep names entered</span><span></span></div>';
+                    }
+                    html += '</div>';
+                    
                     html += '</div>';
                 }
             }
@@ -1864,6 +2461,12 @@
                     
                     html += '<div class="breakdown-section">';
                     html += '<div class="breakdown-section-title">REP PAYOUT (PAR GUTTERS)</div>';
+                    
+                    // Add rep names
+                    if (repNames.length > 0) {
+                        html += '<div class="breakdown-line" style="font-weight: bold; margin-bottom: 8px;"><span>Reps:</span><span>' + repNames.join(', ') + '</span></div>';
+                    }
+                    
                     html += `<div class="breakdown-line"><span>Gutters (${guttersLF} lf × $27):</span><span>${formatCurrency(guttersTotal)}</span></div>`;
                     html += `<div class="breakdown-line"><span>Wood (${woodLF} lf × $17):</span><span>${formatCurrency(woodTotal)}</span></div>`;
                     if (addOnsTotal > 0) {
@@ -1892,11 +2495,59 @@
                         html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perPerson)}</span></div>`;
                         html += `<div class="breakdown-line"><span>- Ride Along Fee Share:</span><span>-${formatCurrency(rideAlongFeePerPerson)}</span></div>`;
                         html += `<div class="breakdown-line total"><span>Final Per Rep:</span><span>${formatCurrency(finalPayout)}</span></div>`;
+                        
+                        // Add individual rep names with amounts - ALWAYS show this section
+                        html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid black;">';
+                        html += '<div style="font-weight: bold; margin-bottom: 6px; font-size: 13px;">REP PAYOUTS:</div>';
+                        if (repNames.length > 0) {
+                            repNames.forEach(name => {
+                                html += `<div class="breakdown-line" style="font-size: 14px; font-weight: bold;"><span>${name}:</span><span>${formatCurrency(finalPayout)}</span></div>`;
+                            });
+                        } else {
+                            html += '<div class="breakdown-line" style="font-size: 14px; font-style: italic;"><span>No rep names entered</span><span></span></div>';
+                        }
+                        html += '</div>';
                     } else {
                         html += `<div class="breakdown-line total"><span>Final Per Rep:</span><span>$0.00 (Sold below PAR)</span></div>`;
                     }
                     html += '</div>';
                 }
+            }
+            
+            // RIDE ALONG BREAKDOWN
+            const numRideAlongs = parseValue(document.getElementById('numRideAlongs').value);
+            if (numRideAlongs > 0) {
+                const rideAlongBonus = parseValue(document.getElementById('rideAlongBonus').value);
+                const totalRideAlongPayout = rideAlongFee + rideAlongBonus;
+                const perRideAlong = numRideAlongs > 0 ? totalRideAlongPayout / numRideAlongs : 0;
+                
+                html += '<div class="breakdown-section">';
+                html += '<div class="breakdown-section-title">RIDE ALONG PAYOUT</div>';
+                
+                // Add ride along names
+                if (rideAlongNames.length > 0) {
+                    html += '<div class="breakdown-line" style="font-weight: bold; margin-bottom: 8px;"><span>Ride Alongs:</span><span>' + rideAlongNames.join(', ') + '</span></div>';
+                }
+                
+                html += `<div class="breakdown-line"><span>Ride Along Fee:</span><span>${formatCurrency(rideAlongFee)}</span></div>`;
+                html += `<div class="breakdown-line"><span>+ Ride Along Bonus:</span><span>+${formatCurrency(rideAlongBonus)}</span></div>`;
+                html += `<div class="breakdown-line"><span>= Total Payout:</span><span>${formatCurrency(totalRideAlongPayout)}</span></div>`;
+                html += `<div class="breakdown-line"><span>÷ Number of Ride Alongs (${numRideAlongs}):</span><span>${formatCurrency(perRideAlong)}</span></div>`;
+                html += `<div class="breakdown-line total"><span>Final Per Ride Along:</span><span>${formatCurrency(perRideAlong)}</span></div>`;
+                
+                // Add individual ride along names with amounts - ALWAYS show this section
+                html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid black;">';
+                html += '<div style="font-weight: bold; margin-bottom: 6px; font-size: 13px;">RIDE ALONG PAYOUTS:</div>';
+                if (rideAlongNames.length > 0) {
+                    rideAlongNames.forEach(name => {
+                        html += `<div class="breakdown-line" style="font-size: 14px; font-weight: bold;"><span>${name}:</span><span>${formatCurrency(perRideAlong)}</span></div>`;
+                    });
+                } else {
+                    html += '<div class="breakdown-line" style="font-size: 14px; font-style: italic;"><span>No ride along names entered</span><span></span></div>';
+                }
+                html += '</div>';
+                
+                html += '</div>';
             }
             
             breakdownContent.innerHTML = html;
@@ -1919,11 +2570,47 @@
                 woodLF: document.getElementById('woodLF').value,
                 insulationSF: document.getElementById('insulationSF').value,
                 insulationWoodLF: document.getElementById('insulationWoodLF').value,
-                vetNames: Array.from(document.getElementById('vetNamesList').querySelectorAll('input')).map(i => i.value),
-                repNames: Array.from(document.getElementById('repNamesList').querySelectorAll('input')).map(i => i.value),
-                rideAlongNames: Array.from(document.getElementById('rideAlongNamesList').querySelectorAll('input')).map(i => i.value),
+                vetNames: [],
+                repNames: [],
+                rideAlongNames: [],
                 rows: []
             };
+
+            // Get vet names from dropdowns or custom inputs
+            const vetList = document.getElementById('vetNamesList');
+            vetList.querySelectorAll('.name-row').forEach(row => {
+                const select = row.querySelector('.name-select');
+                const customInput = row.querySelector('.name-input');
+                if (select && select.style.display !== 'none' && select.value !== 'custom') {
+                    data.vetNames.push(select.value);
+                } else if (customInput && customInput.style.display !== 'none') {
+                    data.vetNames.push(customInput.value);
+                }
+            });
+
+            // Get rep names from dropdowns or custom inputs
+            const repList = document.getElementById('repNamesList');
+            repList.querySelectorAll('.name-row').forEach(row => {
+                const select = row.querySelector('.name-select');
+                const customInput = row.querySelector('.name-input');
+                if (select && select.style.display !== 'none' && select.value !== 'custom') {
+                    data.repNames.push(select.value);
+                } else if (customInput && customInput.style.display !== 'none') {
+                    data.repNames.push(customInput.value);
+                }
+            });
+
+            // Get ride along names from dropdowns or custom inputs
+            const raList = document.getElementById('rideAlongNamesList');
+            raList.querySelectorAll('.name-row').forEach(row => {
+                const select = row.querySelector('.name-select');
+                const customInput = row.querySelector('.name-input');
+                if (select && select.style.display !== 'none' && select.value !== 'custom') {
+                    data.rideAlongNames.push(select.value);
+                } else if (customInput && customInput.style.display !== 'none') {
+                    data.rideAlongNames.push(customInput.value);
+                }
+            });
 
             const rows = document.getElementById('invoiceTableBody').getElementsByTagName('tr');
             for (let row of rows) {
@@ -1940,12 +2627,19 @@
         }
 
         function loadData() {
+            // Load saved names first
+            loadSavedNames();
             // Always start with clear fields
             initializeTable();
         }
 
         function printInvoice() {
-            window.print();
+            // Regenerate breakdown with current data RIGHT BEFORE printing
+            generateBreakdown();
+            // Small delay to ensure DOM updates
+            setTimeout(() => {
+                window.print();
+            }, 100);
         }
 
         function addNewFile() {
@@ -1979,6 +2673,14 @@
         document.getElementById('numRideAlongs').addEventListener('input', () => {
             updateNameFields();
             updateCalculations();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('manageNamesModal');
+            if (event.target === modal) {
+                closeManageNamesModal();
+            }
         });
 
         window.addEventListener('load', loadData);
