@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -392,6 +393,10 @@
             font-weight: bold;
         }
 
+        .calculation-breakdown {
+            display: none;
+        }
+
         .print-btn {
             background: #2196F3;
             color: white;
@@ -699,6 +704,49 @@
             .button-section, .add-btn {
                 display: none;
             }
+            .calculation-breakdown {
+                display: block !important;
+                page-break-before: always;
+                padding: 30px !important;
+                background: white !important;
+            }
+            .breakdown-title {
+                font-size: 20px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                margin-bottom: 20px !important;
+                padding: 15px !important;
+                border: 3px solid black !important;
+                background: white !important;
+                color: black !important;
+            }
+            .breakdown-section {
+                margin-bottom: 20px !important;
+                padding: 15px !important;
+                border: 2px solid black !important;
+                background: white !important;
+            }
+            .breakdown-section-title {
+                font-size: 15px !important;
+                font-weight: bold !important;
+                margin-bottom: 12px !important;
+                color: black !important;
+                text-decoration: underline;
+            }
+            .breakdown-line {
+                display: flex !important;
+                justify-content: space-between !important;
+                padding: 5px 0 !important;
+                font-size: 13px !important;
+                color: black !important;
+            }
+            .breakdown-line.total {
+                font-weight: bold !important;
+                border-top: 2px solid black !important;
+                margin-top: 8px !important;
+                padding-top: 8px !important;
+                font-size: 14px !important;
+            }
             @page {
                 margin: 0.4in 0.35in;
                 size: letter;
@@ -932,6 +980,12 @@
                     <div id="rideAlongNamesList" class="name-list"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- CALCULATION BREAKDOWN (Print Only) -->
+        <div class="calculation-breakdown">
+            <div class="breakdown-title">CALCULATION BREAKDOWN</div>
+            <div id="breakdownContent"></div>
         </div>
 
         <div class="button-section">
@@ -1672,7 +1726,181 @@
             // Update name fields with new amounts
             updateNameFields();
 
+            // Generate calculation breakdown
+            generateBreakdown();
+
             saveData();
+        }
+
+        function generateBreakdown() {
+            const breakdownContent = document.getElementById('breakdownContent');
+            const contractAmount = parseValue(document.getElementById('contractAmount').value);
+            const netAmount = parseValue(document.getElementById('netAmount').value);
+            const numVets = parseValue(document.getElementById('numVets').value);
+            const numReps = parseValue(document.getElementById('numReps').value);
+            const rideAlongFee = parseValue(document.getElementById('rideAlongFee').value);
+            
+            let html = '';
+            
+            // Check if we're using PAR for reps
+            const usingPAR = activePAR !== null && numReps > 0;
+            
+            if (!usingPAR && numVets > 0) {
+                // PROFIT SHARE BREAKDOWN - Show full calculation
+                const totalFees = contractAmount - netAmount;
+                const houseFeePercent = contractAmount <= 20000 ? 10 : contractAmount <= 30000 ? 9 : 8;
+                const houseFeeAmount = (contractAmount * houseFeePercent) / 100;
+                
+                // Calculate job cost
+                const rows = document.getElementById('invoiceTableBody').getElementsByTagName('tr');
+                let totalLaborMaterial = 0;
+                for (let row of rows) {
+                    const costCell = row.cells[1];
+                    const costInput = costCell.querySelector('input[type="number"]');
+                    totalLaborMaterial += parseValue(costInput ? costInput.value : '');
+                }
+                
+                const afterHouseFee = contractAmount - houseFeeAmount;
+                const netAmountDiff = contractAmount - netAmount;
+                const afterFeesFromContract = afterHouseFee - netAmountDiff;
+                const totalAfterFees = afterFeesFromContract - totalLaborMaterial;
+                const profitPercent = contractAmount > 0 ? (totalAfterFees / contractAmount) * 100 : 0;
+                
+                html += '<div class="breakdown-section">';
+                html += '<div class="breakdown-section-title">CONTRACT & FEES</div>';
+                html += `<div class="breakdown-line"><span>Contract Amount:</span><span>${formatCurrency(contractAmount)}</span></div>`;
+                html += `<div class="breakdown-line"><span>- House Fee (${houseFeePercent}%):</span><span>-${formatCurrency(houseFeeAmount)}</span></div>`;
+                html += `<div class="breakdown-line"><span>= After House Fee:</span><span>${formatCurrency(afterHouseFee)}</span></div>`;
+                html += `<div class="breakdown-line"><span>- Fees (Contract - Net):</span><span>-${formatCurrency(netAmountDiff)}</span></div>`;
+                html += `<div class="breakdown-line"><span>= After Fees from Contract:</span><span>${formatCurrency(afterFeesFromContract)}</span></div>`;
+                html += `<div class="breakdown-line"><span>- Job Cost (Labor & Materials):</span><span>-${formatCurrency(totalLaborMaterial)}</span></div>`;
+                html += `<div class="breakdown-line total"><span>= After All Fees (Profit Pool):</span><span>${formatCurrency(totalAfterFees)}</span></div>`;
+                html += `<div class="breakdown-line total"><span>Profit Percentage:</span><span>${profitPercent.toFixed(2)}%</span></div>`;
+                html += '</div>';
+                
+                // VET CALCULATION
+                if (numVets > 0) {
+                    let vetRate = 25;
+                    if (profitPercent >= 50) vetRate = 55;
+                    else if (profitPercent >= 40) vetRate = 45;
+                    else if (profitPercent >= 33) vetRate = 35;
+                    
+                    const totalSalesmen = numVets + numReps;
+                    const totalVetCommission = (totalAfterFees * vetRate) / 100;
+                    const perVetBeforeFees = totalSalesmen > 0 ? totalVetCommission / totalSalesmen : 0;
+                    const totalPeople = numVets + numReps;
+                    const rideAlongFeePerPerson = totalPeople > 0 ? rideAlongFee / totalPeople : 0;
+                    const netAmountFeePerPerson = totalPeople > 0 ? netAmountDiff / totalPeople : 0;
+                    const finalPerVet = perVetBeforeFees - rideAlongFeePerPerson - netAmountFeePerPerson;
+                    
+                    html += '<div class="breakdown-section">';
+                    html += '<div class="breakdown-section-title">VET PAYOUT (PROFIT SHARE)</div>';
+                    html += `<div class="breakdown-line"><span>Profit Pool (After All Fees):</span><span>${formatCurrency(totalAfterFees)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>Vet Rate (based on ${profitPercent.toFixed(2)}% profit):</span><span>${vetRate}%</span></div>`;
+                    html += `<div class="breakdown-line"><span>Total Vet Commission:</span><span>${formatCurrency(totalVetCommission)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perVetBeforeFees)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>- Ride Along Fee Share:</span><span>-${formatCurrency(rideAlongFeePerPerson)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>- Net Amount Fee Share:</span><span>-${formatCurrency(netAmountFeePerPerson)}</span></div>`;
+                    html += `<div class="breakdown-line total"><span>Final Per Vet:</span><span>${formatCurrency(finalPerVet)}</span></div>`;
+                    html += '</div>';
+                }
+                
+                // REP PROFIT SHARE
+                if (numReps > 0 && !usingPAR) {
+                    let repRate = 20;
+                    if (profitPercent >= 50) repRate = 40;
+                    else if (profitPercent >= 40) repRate = 30;
+                    else if (profitPercent >= 33) repRate = 25;
+                    
+                    const totalSalesmen = numVets + numReps;
+                    const totalRepCommission = (totalAfterFees * repRate) / 100;
+                    const perRepBeforeFees = totalSalesmen > 0 ? totalRepCommission / totalSalesmen : 0;
+                    const totalPeople = numVets + numReps;
+                    const rideAlongFeePerPerson = totalPeople > 0 ? rideAlongFee / totalPeople : 0;
+                    const netAmountFeePerPerson = totalPeople > 0 ? netAmountDiff / totalPeople : 0;
+                    const finalPerRep = perRepBeforeFees - rideAlongFeePerPerson - netAmountFeePerPerson;
+                    
+                    html += '<div class="breakdown-section">';
+                    html += '<div class="breakdown-section-title">REP PAYOUT (PROFIT SHARE)</div>';
+                    html += `<div class="breakdown-line"><span>Profit Pool (After All Fees):</span><span>${formatCurrency(totalAfterFees)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>Rep Rate (based on ${profitPercent.toFixed(2)}% profit):</span><span>${repRate}%</span></div>`;
+                    html += `<div class="breakdown-line"><span>Total Rep Commission:</span><span>${formatCurrency(totalRepCommission)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perRepBeforeFees)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>- Ride Along Fee Share:</span><span>-${formatCurrency(rideAlongFeePerPerson)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>- Net Amount Fee Share:</span><span>-${formatCurrency(netAmountFeePerPerson)}</span></div>`;
+                    html += `<div class="breakdown-line total"><span>Final Per Rep:</span><span>${formatCurrency(finalPerRep)}</span></div>`;
+                    html += '</div>';
+                }
+            }
+            
+            // PAR BREAKDOWN - Only show relevant info
+            if (usingPAR) {
+                const totalFees = contractAmount - netAmount;
+                
+                html += '<div class="breakdown-section">';
+                html += '<div class="breakdown-section-title">CONTRACT INFORMATION</div>';
+                html += `<div class="breakdown-line"><span>Contract Amount:</span><span>${formatCurrency(contractAmount)}</span></div>`;
+                html += `<div class="breakdown-line"><span>Net Amount:</span><span>${formatCurrency(netAmount)}</span></div>`;
+                html += `<div class="breakdown-line total"><span>Total Fees (Contract - Net):</span><span>${formatCurrency(totalFees)}</span></div>`;
+                html += '</div>';
+                
+                if (activePAR === 'gutters') {
+                    const guttersLF = parseValue(document.getElementById('guttersLF').value);
+                    const woodLF = parseValue(document.getElementById('woodLF').value);
+                    const guttersTotal = guttersLF * 27;
+                    const woodTotal = woodLF * 17;
+                    
+                    let addOnsTotal = 0;
+                    const addOnRows = document.getElementById('parAddOnsList').getElementsByClassName('par-addon-row');
+                    for (let row of addOnRows) {
+                        const inputs = row.getElementsByTagName('input');
+                        const quantity = parseValue(inputs[1].value);
+                        const rate = parseValue(inputs[2].value);
+                        addOnsTotal += quantity * rate;
+                    }
+                    
+                    const parAmount = guttersTotal + woodTotal + addOnsTotal;
+                    const repHalfOfFees = totalFees / 2;
+                    const adjustedAmount = netAmount + repHalfOfFees;
+                    
+                    html += '<div class="breakdown-section">';
+                    html += '<div class="breakdown-section-title">REP PAYOUT (PAR GUTTERS)</div>';
+                    html += `<div class="breakdown-line"><span>Gutters (${guttersLF} lf × $27):</span><span>${formatCurrency(guttersTotal)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>Wood (${woodLF} lf × $17):</span><span>${formatCurrency(woodTotal)}</span></div>`;
+                    if (addOnsTotal > 0) {
+                        html += `<div class="breakdown-line"><span>Add-ons:</span><span>${formatCurrency(addOnsTotal)}</span></div>`;
+                    }
+                    html += `<div class="breakdown-line total"><span>Total PAR:</span><span>${formatCurrency(parAmount)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>Net Amount:</span><span>${formatCurrency(netAmount)}</span></div>`;
+                    html += `<div class="breakdown-line"><span>+ Rep Half of Fees (${formatCurrency(totalFees)} ÷ 2):</span><span>+${formatCurrency(repHalfOfFees)}</span></div>`;
+                    html += `<div class="breakdown-line total"><span>Adjusted Amount:</span><span>${formatCurrency(adjustedAmount)}</span></div>`;
+                    
+                    if (adjustedAmount >= parAmount) {
+                        const basePay = parAmount * 0.10;
+                        const overage = adjustedAmount - parAmount;
+                        const overagePay = overage * 0.50;
+                        const gross = basePay + overagePay;
+                        const totalSalesmen = numVets + numReps;
+                        const perPerson = totalSalesmen > 0 ? gross / totalSalesmen : 0;
+                        const totalPeople = numVets + numReps;
+                        const rideAlongFeePerPerson = totalPeople > 0 ? rideAlongFee / totalPeople : 0;
+                        const finalPayout = perPerson - rideAlongFeePerPerson;
+                        
+                        html += `<div class="breakdown-line"><span>Base Pay (10% of PAR):</span><span>${formatCurrency(basePay)}</span></div>`;
+                        html += `<div class="breakdown-line"><span>Overage (${formatCurrency(adjustedAmount)} - ${formatCurrency(parAmount)}):</span><span>${formatCurrency(overage)}</span></div>`;
+                        html += `<div class="breakdown-line"><span>Overage Pay (50%):</span><span>${formatCurrency(overagePay)}</span></div>`;
+                        html += `<div class="breakdown-line"><span>Gross Payout:</span><span>${formatCurrency(gross)}</span></div>`;
+                        html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perPerson)}</span></div>`;
+                        html += `<div class="breakdown-line"><span>- Ride Along Fee Share:</span><span>-${formatCurrency(rideAlongFeePerPerson)}</span></div>`;
+                        html += `<div class="breakdown-line total"><span>Final Per Rep:</span><span>${formatCurrency(finalPayout)}</span></div>`;
+                    } else {
+                        html += `<div class="breakdown-line total"><span>Final Per Rep:</span><span>$0.00 (Sold below PAR)</span></div>`;
+                    }
+                    html += '</div>';
+                }
+            }
+            
+            breakdownContent.innerHTML = html;
         }
 
         function saveData() {
