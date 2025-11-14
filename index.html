@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2102,16 +2101,12 @@
                 // Display PAR amount (minimum the job should be sold for)
                 document.getElementById('parGuttersAmount').textContent = formatCurrency(parAmount);
                 
-                // Calculate adjusted amount: Net + (Fees / 2)
-                const totalFees = contractAmount - netAmount;
-                const repHalfOfFees = totalFees / 2;
-                const adjustedAmount = netAmount + repHalfOfFees;
-                
-                // Calculate payout: 10% of PAR + 50% of (adjusted - PAR)
+                // Calculate payout: 10% of PAR + 50% of (Net - PAR)
+                // SIMPLIFIED: Use Net Amount directly, no more "Adjusted Amount"
                 let parGuttersGross = 0;
-                if (adjustedAmount >= parAmount) {
+                if (netAmount >= parAmount) {
                     const basePay = parAmount * 0.10;
-                    const overage = adjustedAmount - parAmount;
+                    const overage = netAmount - parAmount;
                     const overagePay = overage * 0.50;
                     parGuttersGross = basePay + overagePay;
                 }
@@ -2119,7 +2114,7 @@
                 // Divide by total salesmen
                 const parPerPerson = totalSalesmen > 0 ? parGuttersGross / totalSalesmen : 0;
                 
-                // PAR rep only pays ride-along fee share (fees already handled in adjusted amount)
+                // PAR rep only pays ride-along fee share
                 finalPerRep = parPerPerson - rideAlongFeePerPerson;
                 
                 // Hide profit share rate box when PAR is active
@@ -2150,16 +2145,12 @@
                 // Display PAR amount (minimum the job should be sold for)
                 document.getElementById('parInsulationAmount').textContent = formatCurrency(parAmount);
                 
-                // Calculate adjusted amount: Net + (Fees / 2)
-                const totalFees = contractAmount - netAmount;
-                const repHalfOfFees = totalFees / 2;
-                const adjustedAmount = netAmount + repHalfOfFees;
-                
-                // Calculate payout: 10% of PAR + 50% of (adjusted - PAR)
+                // Calculate payout: 10% of PAR + 50% of (Net - PAR)
+                // SIMPLIFIED: Use Net Amount directly, no more "Adjusted Amount"
                 let parInsulationGross = 0;
-                if (adjustedAmount >= parAmount) {
+                if (netAmount >= parAmount) {
                     const basePay = parAmount * 0.10;
-                    const overage = adjustedAmount - parAmount;
+                    const overage = netAmount - parAmount;
                     const overagePay = overage * 0.50;
                     parInsulationGross = basePay + overagePay;
                 }
@@ -2167,7 +2158,7 @@
                 // Divide by total salesmen
                 const parPerPerson = totalSalesmen > 0 ? parInsulationGross / totalSalesmen : 0;
                 
-                // PAR rep only pays ride-along fee share (fees already handled in adjusted amount)
+                // PAR rep only pays ride-along fee share
                 finalPerRep = parPerPerson - rideAlongFeePerPerson;
                 
                 // Hide profit share rate box when PAR is active
@@ -2208,16 +2199,12 @@
                 // Display PAR amount
                 document.getElementById('parCoatingAmount').textContent = formatCurrency(parAmount);
                 
-                // Calculate adjusted amount: Net + (Fees / 2)
-                const totalFees = contractAmount - netAmount;
-                const repHalfOfFees = totalFees / 2;
-                const adjustedAmount = netAmount + repHalfOfFees;
-                
-                // Calculate payout: 10% of PAR + 50% of (adjusted - PAR)
+                // Calculate payout: 10% of PAR + 50% of (Net - PAR)
+                // SIMPLIFIED: Use Net Amount directly, no more "Adjusted Amount"
                 let parCoatingGross = 0;
-                if (adjustedAmount >= parAmount) {
+                if (netAmount >= parAmount) {
                     const basePay = parAmount * 0.10;
-                    const overage = adjustedAmount - parAmount;
+                    const overage = netAmount - parAmount;
                     const overagePay = overage * 0.50;
                     parCoatingGross = basePay + overagePay;
                 }
@@ -2225,7 +2212,7 @@
                 // Divide by total salesmen
                 const parPerPerson = totalSalesmen > 0 ? parCoatingGross / totalSalesmen : 0;
                 
-                // PAR rep only pays ride-along fee share (fees already handled in adjusted amount)
+                // PAR rep only pays ride-along fee share
                 finalPerRep = parPerPerson - rideAlongFeePerPerson;
                 
                 // Hide profit share rate box when PAR is active
@@ -2457,8 +2444,6 @@
                     }
                     
                     const parAmount = guttersTotal + woodTotal + addOnsTotal;
-                    const repHalfOfFees = totalFees / 2;
-                    const adjustedAmount = netAmount + repHalfOfFees;
                     
                     html += '<div class="breakdown-section">';
                     html += '<div class="breakdown-section-title">REP PAYOUT (PAR GUTTERS)</div>';
@@ -2475,12 +2460,10 @@
                     }
                     html += `<div class="breakdown-line total"><span>Total PAR:</span><span>${formatCurrency(parAmount)}</span></div>`;
                     html += `<div class="breakdown-line"><span>Net Amount:</span><span>${formatCurrency(netAmount)}</span></div>`;
-                    html += `<div class="breakdown-line"><span>+ Rep Half of Fees (${formatCurrency(totalFees)} ÷ 2):</span><span>+${formatCurrency(repHalfOfFees)}</span></div>`;
-                    html += `<div class="breakdown-line total"><span>Adjusted Amount:</span><span>${formatCurrency(adjustedAmount)}</span></div>`;
                     
-                    if (adjustedAmount >= parAmount) {
+                    if (netAmount >= parAmount) {
                         const basePay = parAmount * 0.10;
-                        const overage = adjustedAmount - parAmount;
+                        const overage = netAmount - parAmount;
                         const overagePay = overage * 0.50;
                         const gross = basePay + overagePay;
                         const totalSalesmen = numVets + numReps;
@@ -2489,8 +2472,8 @@
                         const rideAlongFeePerPerson = totalPeople > 0 ? rideAlongFee / totalPeople : 0;
                         const finalPayout = perPerson - rideAlongFeePerPerson;
                         
+                        html += `<div class="breakdown-line"><span>Overage (Net - PAR):</span><span>${formatCurrency(overage)}</span></div>`;
                         html += `<div class="breakdown-line"><span>Base Pay (10% of PAR):</span><span>${formatCurrency(basePay)}</span></div>`;
-                        html += `<div class="breakdown-line"><span>Overage (${formatCurrency(adjustedAmount)} - ${formatCurrency(parAmount)}):</span><span>${formatCurrency(overage)}</span></div>`;
                         html += `<div class="breakdown-line"><span>Overage Pay (50%):</span><span>${formatCurrency(overagePay)}</span></div>`;
                         html += `<div class="breakdown-line"><span>Gross Payout:</span><span>${formatCurrency(gross)}</span></div>`;
                         html += `<div class="breakdown-line"><span>÷ Total Salesmen (${totalSalesmen}):</span><span>${formatCurrency(perPerson)}</span></div>`;
